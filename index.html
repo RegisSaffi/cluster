@@ -32,8 +32,242 @@
   <title>driveos</title>
   <link rel="manifest" href="manifest.json">
   <script type="module" src="./assets/packages/o3d/assets/model-viewer.min.js" defer></script>
+  <style>
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+      overflow: hidden;
+    }
+
+    #loading-screen::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(100, 200, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100, 200, 255, 0.15) 1px, transparent 1px);
+      background-size: 60px 60px;
+      background-position: 0 0, 0 0;
+    }
+
+    #loading-screen::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle at 50% 50%,
+        rgba(100, 200, 255, 0.2) 0%,
+        transparent 80%
+      );
+    }
+
+    #loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .car-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 40px;
+      z-index: 2;
+    }
+
+    .car-icon {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 0 15px rgba(100, 200, 255, 0.4));
+    }
+
+    .car-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .indicator-lights {
+      display: flex;
+      gap: 12px;
+      margin-top: 30px;
+      z-index: 2;
+    }
+
+    .indicator-light {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(100, 200, 255, 0.3);
+      position: relative;
+    }
+
+    .indicator-light::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(100, 200, 255, 0.6);
+      animation: indicator-pulse 1.5s ease-in-out infinite;
+    }
+
+    .indicator-light:nth-child(1)::before {
+      animation-delay: 0s;
+    }
+
+    .indicator-light:nth-child(2)::before {
+      animation-delay: 0.2s;
+    }
+
+    .indicator-light:nth-child(3)::before {
+      animation-delay: 0.4s;
+    }
+
+    .indicator-light:nth-child(4)::before {
+      animation-delay: 0.6s;
+    }
+
+    .indicator-light:nth-child(5)::before {
+      animation-delay: 0.8s;
+    }
+
+    @keyframes indicator-pulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+        box-shadow: 0 0 0 0 rgba(100, 200, 255, 0.7);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 1;
+        box-shadow: 0 0 12px 4px rgba(100, 200, 255, 0.8);
+      }
+    }
+
+    .loading-text {
+      color: #64C8FF;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      margin-top: 25px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      z-index: 2;
+      text-shadow: 0 0 10px rgba(100, 200, 255, 0.3);
+    }
+  </style>
 </head>
 <body>
+  <div id="loading-screen">
+    <div class="car-container">
+      <div class="car-icon">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="carBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#7DD3FF;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#64C8FF;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="grilleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#2a2a2a;stop-opacity:1" />
+            </linearGradient>
+            <radialGradient id="headlightGrad" cx="50%" cy="50%">
+              <stop offset="0%" style="stop-color:#FFF8DC;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#FFE066;stop-opacity:0.9" />
+            </radialGradient>
+          </defs>
+          
+          <!-- Main car body (front view) -->
+          <path d="M 30 180 Q 30 160 35 140 Q 40 100 50 70 Q 60 40 70 30 Q 80 20 100 20 Q 120 20 130 30 Q 140 40 150 70 Q 160 100 165 140 Q 170 160 170 180 L 160 190 L 40 190 Z" 
+                fill="url(#carBodyGrad)" stroke="#4A90C2" stroke-width="2"/>
+          
+          <!-- Windshield area -->
+          <path d="M 50 70 Q 60 50 70 40 Q 80 35 100 35 Q 120 35 130 40 Q 140 50 150 70 L 150 90 L 50 90 Z" 
+                fill="#B8E6FF" opacity="0.5" stroke="#4A90C2" stroke-width="1.5"/>
+          
+          <!-- Hood accent -->
+          <ellipse cx="100" cy="50" rx="45" ry="20" fill="#5AB8EE" opacity="0.2"/>
+          
+          <!-- Main grille -->
+          <rect x="70" y="110" width="60" height="35" rx="4" fill="url(#grilleGrad)" opacity="0.9"/>
+          
+          <!-- Grille vertical bars -->
+          <line x1="80" y1="115" x2="80" y2="140" stroke="#4A4A4A" stroke-width="1.5"/>
+          <line x1="90" y1="115" x2="90" y2="140" stroke="#4A4A4A" stroke-width="1.5"/>
+          <line x1="100" y1="115" x2="100" y2="140" stroke="#4A4A4A" stroke-width="1.5"/>
+          <line x1="110" y1="115" x2="110" y2="140" stroke="#4A4A4A" stroke-width="1.5"/>
+          <line x1="120" y1="115" x2="120" y2="140" stroke="#4A4A4A" stroke-width="1.5"/>
+          
+          <!-- Grille horizontal accent -->
+          <line x1="75" y1="125" x2="125" y2="125" stroke="#3A3A3A" stroke-width="1"/>
+          <line x1="75" y1="135" x2="125" y2="135" stroke="#3A3A3A" stroke-width="1"/>
+          
+          <!-- Left headlight -->
+          <ellipse cx="50" cy="120" rx="12" ry="18" fill="url(#headlightGrad)"/>
+          <ellipse cx="50" cy="120" rx="8" ry="12" fill="#FFFFFF" opacity="0.8"/>
+          <ellipse cx="48" cy="118" rx="3" ry="5" fill="#FFE066" opacity="0.9"/>
+          
+          <!-- Right headlight -->
+          <ellipse cx="150" cy="120" rx="12" ry="18" fill="url(#headlightGrad)"/>
+          <ellipse cx="150" cy="120" rx="8" ry="12" fill="#FFFFFF" opacity="0.8"/>
+          <ellipse cx="152" cy="118" rx="3" ry="5" fill="#FFE066" opacity="0.9"/>
+          
+          <!-- Bumper -->
+          <path d="M 40 170 Q 50 165 100 165 Q 150 165 160 170 L 160 180 L 40 180 Z" 
+                fill="#2A2A2A" opacity="0.8" stroke="#1A1A1A" stroke-width="1.5"/>
+          
+          <!-- Bumper accent line -->
+          <line x1="45" y1="175" x2="155" y2="175" stroke="#4A4A4A" stroke-width="1" opacity="0.6"/>
+          
+          <!-- Side accents -->
+          <path d="M 35 150 Q 40 140 50 130" stroke="#5AB8EE" stroke-width="2" fill="none" opacity="0.4"/>
+          <path d="M 165 150 Q 160 140 150 130" stroke="#5AB8EE" stroke-width="2" fill="none" opacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+    <div class="indicator-lights">
+      <div class="indicator-light"></div>
+      <div class="indicator-light"></div>
+      <div class="indicator-light"></div>
+      <div class="indicator-light"></div>
+      <div class="indicator-light"></div>
+    </div>
+    <div class="loading-text">Loading DriveOS</div>
+  </div>
+
+  <script>
+    window.addEventListener('flutter-first-frame', function() {
+      const loadingScreen = document.getElementById('loading-screen');
+      if (loadingScreen) {
+        loadingScreen.classList.add('hidden');
+        setTimeout(function() {
+          loadingScreen.remove();
+        }, 500);
+      }
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
