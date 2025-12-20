@@ -33199,7 +33199,7 @@ $1(a){this.a.Sz()},
 $S:67}
 A.a2a.prototype={
 $2(a,b){var s,r,q=null
-if(b.b<600||b.d<400)return A.z9(A.m4("Screen too small for DriveOS UI cluster, request desktop mode or use landscape mode",q,A.ek(q,q,A.cL(a).ax.b,q,q,q,q,q,q,q,q,18,q,q,q,q,q,!0,q,q,q,q,q,q,q,q),B.cG),q,q)
+if(b.b<600||b.d<400)return A.z9(A.m4("Screen too small for  cluster UI, request desktop mode from browser menu for best experience.",q,A.ek(q,q,A.cL(a).ax.b,q,q,q,q,q,q,q,q,18,q,q,q,q,q,!0,q,q,q,q,q,q,q,q),B.cG),q,q)
 s=t.E
 r=this.a
 return A.fS(B.aX,A.b([A.an0(0,A.i6(q,q,new A.G2(q),B.P)),A.z9(A.Au(A.b([A.fS(B.aX,A.b([new A.qz(q),new A.ea(B.yj,new A.Cq(q),q)],s),B.au),A.zs(A.b([new A.ea(B.yl,A.Au(A.b([new A.nQ("Brake \u25bc",!0,this.b,new A.a26(r),new A.a27(r),q),B.Ga,new A.nQ("Throttle \u25b2",!1,this.c,new A.a28(r),new A.a29(r),q)],s),B.ak,B.bV,q,B.cu,B.as,0,q,q,B.bn),q)],s),B.cu,B.as)],s),B.ak,B.b_,q,B.cu,B.as,0,q,q,B.bn),q,q)],s),B.au)},
